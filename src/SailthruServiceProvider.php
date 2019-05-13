@@ -14,10 +14,7 @@ class SailthruServiceProvider extends ServiceProvider
         $this->app->when(SailthruChannel::class)
             ->needs(\Sailthru_Client::class)
             ->give(function () {
-                return new \Sailthru_Client(
-                    config('services.sailthru.api_key'),
-                    config('services.sailthru.secret')
-                );
+                return new \Sailthru_Client(config('services.sailthru'))
             });
     }
 
