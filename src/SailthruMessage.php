@@ -3,7 +3,6 @@
 namespace NotificationChannels\Sailthru;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 class SailthruMessage
 {
