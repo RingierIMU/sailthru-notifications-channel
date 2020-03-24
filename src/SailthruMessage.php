@@ -202,7 +202,7 @@ class SailthruMessage
     public function toName(
         string $toName
     ): SailthruMessage {
-        $this->toName = Str::title($toName);
+        $this->toName = $toName;
 
         return $this;
     }
