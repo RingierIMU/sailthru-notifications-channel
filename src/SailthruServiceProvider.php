@@ -3,6 +3,7 @@
 namespace NotificationChannels\Sailthru;
 
 use Illuminate\Support\ServiceProvider;
+use Sailthru_Client;
 
 class SailthruServiceProvider extends ServiceProvider
 {
@@ -11,20 +12,17 @@ class SailthruServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->when(SailthruChannel::class)
-            ->needs(\Sailthru_Client::class)
+        $this
+            ->app
+            ->when(SailthruChannel::class)
+            ->needs(Sailthru_Client::class)
             ->give(function () {
-                return new \Sailthru_Client(
-                    config('services.sailthru.api_key'),
-                    config('services.sailthru.secret')
+                $config = $this->app['config'];
+
+                return new Sailthru_Client(
+                    $config->get('services.sailthru.api_key'),
+                    $config->get('services.sailthru.secret')
                 );
             });
-    }
-
-    /**
-     * Register the application services.
-     */
-    public function register()
-    {
     }
 }

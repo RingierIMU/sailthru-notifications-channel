@@ -2,6 +2,9 @@
 
 namespace NotificationChannels\Sailthru;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 class SailthruMessage
 {
     /**
@@ -73,8 +76,9 @@ class SailthruMessage
      *
      * @param string $template
      */
-    public function __construct(string $template)
-    {
+    public function __construct(
+        string $template
+    ) {
         $this->template = $template;
         $this->fromEmail = config('mail.from.address');
         $this->fromName = config('mail.from.name');
@@ -85,8 +89,9 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public static function create(string $template): SailthruMessage
-    {
+    public static function create(
+        string $template
+    ): SailthruMessage {
         return new static($template);
     }
 
@@ -95,8 +100,9 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function vars(array $vars): SailthruMessage
-    {
+    public function vars(
+        array $vars
+    ): SailthruMessage {
         $this->vars = $vars;
 
         return $this;
@@ -107,8 +113,9 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function eVars(array $eVars): SailthruMessage
-    {
+    public function eVars(
+        array $eVars
+    ): SailthruMessage {
         $this->eVars = $eVars;
 
         return $this;
@@ -119,8 +126,9 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function mergeDefaultVars(array $defaultVars): SailthruMessage
-    {
+    public function mergeDefaultVars(
+        array $defaultVars
+    ): SailthruMessage {
         $this->vars = array_merge($defaultVars, $this->getVars());
 
         return $this;
@@ -131,8 +139,9 @@ class SailthruMessage
      *
      * @return $this
      */
-    public function template(string $template): SailthruMessage
-    {
+    public function template(
+        string $template
+    ): SailthruMessage {
         $this->template = $template;
 
         return $this;
@@ -143,17 +152,18 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function from(array $from): SailthruMessage
-    {
+    public function from(
+        array $from
+    ): SailthruMessage {
         $this->fromEmail(
-            array_get(
+            Arr::get(
                 $from,
                 'address',
-                array_get($from, 'email')
+                Arr::get($from, 'email')
             )
         );
 
-        $name = array_get($from, 'name');
+        $name = Arr::get($from, 'name');
 
         if ($name) {
             $this->fromName($name);
@@ -167,17 +177,15 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function to(array $to): SailthruMessage
-    {
+    public function to(
+        array $to
+    ): SailthruMessage {
         $this->toEmail(
-            array_get(
-                $to,
-                'address',
-                array_get($to, 'email')
-            )
+            Arr::get($to, 'address')
+                ?: Arr::get($to, 'email')
         );
 
-        $name = array_get($to, 'name');
+        $name = Arr::get($to, 'name');
 
         if ($name) {
             $this->toName($name);
@@ -191,9 +199,10 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function toName(string $toName): SailthruMessage
-    {
-        $this->toName = title_case($toName);
+    public function toName(
+        string $toName
+    ): SailthruMessage {
+        $this->toName = Str::title($toName);
 
         return $this;
     }
@@ -203,8 +212,9 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function fromName(string $fromName): SailthruMessage
-    {
+    public function fromName(
+        string $fromName
+    ): SailthruMessage {
         $this->fromName = $fromName;
 
         return $this;
@@ -215,20 +225,22 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function toEmail(string $toEmail): SailthruMessage
-    {
+    public function toEmail(
+        string $toEmail
+    ): SailthruMessage {
         $this->toEmail = $toEmail;
 
         return $this;
     }
 
     /**
-     * @param string $toEmail
+     * @param array $toEmails
      *
      * @return SailthruMessage
      */
-    public function toEmails(array $toEmails): SailthruMessage
-    {
+    public function toEmails(
+        array $toEmails
+    ): SailthruMessage {
         $this->toEmail = implode(',', $toEmails);
         $this->isMultiSend = true;
 
@@ -240,8 +252,9 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function fromEmail(string $fromEmail): SailthruMessage
-    {
+    public function fromEmail(
+        string $fromEmail
+    ): SailthruMessage {
         $this->fromEmail = $fromEmail;
 
         return $this;
@@ -252,8 +265,9 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function replyTo(string $replyTo): SailthruMessage
-    {
+    public function replyTo(
+        string $replyTo
+    ): SailthruMessage {
         $this->replyTo = $replyTo;
 
         return $this;
@@ -264,8 +278,9 @@ class SailthruMessage
      *
      * @return SailthruMessage
      */
-    public function options(array $options): SailthruMessage
-    {
+    public function options(
+        array $options
+    ): SailthruMessage {
         $this->options = $options;
 
         return $this;
