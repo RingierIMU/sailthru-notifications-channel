@@ -2,6 +2,7 @@
 
 namespace NotificationChannels\Sailthru;
 
+use Exception;
 use Illuminate\Notifications\Events\NotificationFailed;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Notifications\Notification;
@@ -70,7 +71,7 @@ class SailthruChannel
                 new NotificationSent(
                     $notifiable,
                     $notification,
-                    static::class,
+                    'sailthru',
                     [
                         'message' => $message,
                         'response' => $response,
@@ -79,12 +80,12 @@ class SailthruChannel
             );
 
             return $response;
-        } catch (Sailthru_Client_Exception $e) {
+        } catch (Exception $e) {
             Event::dispatch(
                 new NotificationFailed(
                     $notifiable,
                     $notification,
-                    static::class,
+                    'sailthru',
                     [
                         'message' => $message,
                         'exception' => $e,
