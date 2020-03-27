@@ -8,16 +8,20 @@ use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
-use Sailthru_Client;
 use Sailthru_Client_Exception;
 
 class SailthruChannel
 {
     /**
-     * @param Sailthru_Client $sailthru
+     * @var SailthruClient
+     */
+    protected $sailthru;
+
+    /**
+     * @param SailthruClient $sailthru
      */
     public function __construct(
-        Sailthru_Client $sailthru
+        SailthruClient $sailthru
     ) {
         $this->sailthru = $sailthru;
     }

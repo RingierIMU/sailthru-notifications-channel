@@ -2,27 +2,32 @@
 
 namespace NotificationChannels\Sailthru;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
-use Sailthru_Client;
 
-class SailthruServiceProvider extends ServiceProvider
+class SailthruServiceProvider
+    extends ServiceProvider
+    implements DeferrableProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
-    public function boot()
+    public function register()
     {
-        $this
-            ->app
-            ->when(SailthruChannel::class)
-            ->needs(Sailthru_Client::class)
-            ->give(function () {
-                $config = $this->app['config'];
-
-                return new Sailthru_Client(
-                    $config->get('services.sailthru.api_key'),
-                    $config->get('services.sailthru.secret')
+        $this->app->singleton(
+            SailthruClient::class,
+            function (Application $app) {
+                return new SailthruClient(
+                    $app['config']->get('services.sailthru.api_key'),
+                    $app['config']->get('services.sailthru.secret')
                 );
-            });
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function provides()
+    {
+        return [SailthruClient::class];
     }
 }
