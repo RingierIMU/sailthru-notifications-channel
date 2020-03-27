@@ -6,9 +6,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
-class SailthruServiceProvider
-    extends ServiceProvider
-    implements DeferrableProvider
+class SailthruServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     public function register()
     {
