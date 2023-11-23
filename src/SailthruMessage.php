@@ -66,6 +66,11 @@ class SailthruMessage
     protected $isMultiSend = false;
 
     /**
+     * @var bool
+     */
+    protected $isEvent = false;
+
+    /**
      * @var array
      */
     protected $options = [];
@@ -369,5 +374,26 @@ class SailthruMessage
     public function isMultiSend(): bool
     {
         return $this->isMultiSend;
+    }
+
+    /**
+     * @param string $useEvent
+     *
+     * @return SailthruMessage
+     */
+    public function setIsEvent(
+        bool $useEventApi
+    ): SailthruMessage {
+        $this->isEvent = $useEventApi;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function useEvent(): bool
+    {
+        return $this->isEvent;
     }
 }

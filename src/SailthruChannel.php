@@ -67,9 +67,17 @@ class SailthruChannel
                 static::getDefaultVars()
             );
 
-            $response = $message->isMultiSend()
-                ? $this->multiSend($message)
-                : $this->singleSend($message);
+            if ($message->useEvent()) {
+                if ($message->isMultiSend()) {
+                    throw new Exception('Message expects to be sent as Event and is, but cannot be, Multi-Send');
+                } else {
+                    $response = $this->sendEvent($message);
+                }
+            } else {
+                $response = $message->isMultiSend()
+                    ? $this->multiSend($message)
+                    : $this->singleSend($message);
+            }
 
             Event::dispatch(
                 new NotificationSent(
@@ -171,6 +179,38 @@ class SailthruChannel
             $toEmail,
             $vars,
             $options
+        );
+    }
+
+    /**
+     * @param SailthruMessage $sailthruMessage
+     *
+     * @throws Sailthru_Client_Exception
+     *
+     * @return array
+     */
+    protected function sendEvent(
+        SailthruMessage $sailthruMessage
+    ) {
+        $template = $sailthruMessage->getTemplate();
+        $toEmail = $sailthruMessage->getToEmail();
+        $vars = $sailthruMessage->getVars();
+
+        if (config('services.sailthru.log_payload') === true) {
+            Log::debug(
+                'Sailthru Payload',
+                [
+                    'template' => $template,
+                    'email' => $toEmail,
+                    'vars' => $vars,
+                ]
+            );
+        }
+
+        return $this->sailthru->postEvent(
+            $toEmail,
+            $template,
+            $vars
         );
     }
 }
