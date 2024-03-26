@@ -68,9 +68,9 @@ class SailthruChannel
                 static::getDefaultVars()
             );
 
-            if (config('services.sailthru.whitelist.enabled') === true) {
+            if (config('services.sailthru.whitelist_check.enabled') === true) {
                 if(!Str::is(
-                    config('services.sailthru.whitelist.domains'),
+                    config('services.sailthru.whitelist_domains'),
                     $message->getToEmail()
                 )){
                     Log::info(
