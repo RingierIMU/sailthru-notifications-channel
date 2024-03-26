@@ -8,8 +8,8 @@ use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
-use Sailthru_Client_Exception;
 use Illuminate\Support\Str;
+use Sailthru_Client_Exception;
 
 class SailthruChannel
 {
