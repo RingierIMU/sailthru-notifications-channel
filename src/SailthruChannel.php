@@ -74,7 +74,7 @@ class SailthruChannel
                     $message->getToEmail()
                 )){
                     Log::info(
-                        'Sailthru email not sent due to domain whitelist',
+                        'Sailthru email not sent to ' . $message->getToEmail() . ' due to domain whitelist limitations',
                         [
                             'notifiable' => $notifiable,
                             'notification' => $notification,
