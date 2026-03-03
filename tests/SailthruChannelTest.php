@@ -4,11 +4,9 @@ use Illuminate\Notifications\Events\NotificationFailed;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Event;
-use Mockery;
 use NotificationChannels\Sailthru\SailthruChannel;
 use NotificationChannels\Sailthru\SailthruClient;
 use NotificationChannels\Sailthru\SailthruMessage;
-use Sailthru_Client_Exception;
 
 // ---------------------------------------------------------------------------
 // Single-recipient send (TEST-06)
