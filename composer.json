@@ -1,7 +1,6 @@
 {
     "name": "laravel-notification-channels/sailthru-notifications-channel",
     "description": "SailThru notifications channel for Laravel",
-    "homepage": "https://github.com/laravel-notification-channels/sailthru",
     "license": "MIT",
     "authors": [
         {
@@ -11,15 +10,16 @@
             "role": "Developer"
         }
     ],
+    "homepage": "https://github.com/RingierIMU/sailthru-notifications-channel",
     "require": {
         "php": "^8.3",
-        "illuminate/notifications": "^11.0|^12.0",
-        "illuminate/support": "^11.0|^12.0",
+        "illuminate/notifications": "^11.0 || ^12.0",
+        "illuminate/support": "^11.0 || ^12.0",
         "sailthru/sailthru-php5-client": "^1.2"
     },
     "require-dev": {
         "mockery/mockery": "^1.6",
-        "orchestra/testbench": "^9.0|^10.0",
+        "orchestra/testbench": "^9.0 || ^10.0",
         "pestphp/pest": "^4.0",
         "pestphp/pest-plugin-laravel": "^4.0"
     },
@@ -33,8 +33,11 @@
             "NotificationChannels\\Sailthru\\Test\\": "tests"
         }
     },
-    "scripts": {
-        "test": "vendor/bin/pest"
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
     },
     "extra": {
         "laravel": {
@@ -43,10 +46,7 @@
             ]
         }
     },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
+    "scripts": {
+        "test": "vendor/bin/pest"
     }
 }

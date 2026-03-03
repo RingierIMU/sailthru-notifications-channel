@@ -28,16 +28,14 @@ test('single send calls sailthru client send method', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@example.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('welcome-template'))
@@ -66,16 +64,14 @@ test('single send passes correct template and email to client', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'buyer@shop.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('order-confirmation'))
@@ -103,16 +99,14 @@ test('multi send calls sailthru client multisend method', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'a@test.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('bulk-template'))
@@ -142,16 +136,14 @@ test('multi send passes comma-joined emails and evars', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'a@test.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('bulk-template'))
@@ -177,16 +169,14 @@ test('send returns empty array when disabled via config', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@example.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('any-template'))
@@ -209,16 +199,14 @@ test('send does not call client when disabled', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@example.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('any-template'))
@@ -247,16 +235,14 @@ test('send blocked by domain whitelist returns empty array', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@blocked.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('whitelist-template'))
@@ -283,16 +269,14 @@ test('send allowed by domain whitelist proceeds normally', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@allowed.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('whitelist-template'))
@@ -316,16 +300,14 @@ test('whitelist check skipped when not enabled', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@anydomain.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('any-template'))
@@ -351,16 +333,14 @@ test('NotificationSent event dispatched on successful send', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@example.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('event-template'))
@@ -384,16 +364,14 @@ test('NotificationSent event contains sailthru channel name', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@example.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('event-template'))
@@ -423,16 +401,14 @@ test('NotificationFailed event dispatched on Sailthru_Client_Exception', functio
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@example.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('fail-template'))
@@ -456,16 +432,14 @@ test('NotificationFailed event contains exception data', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@example.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('fail-template'))
@@ -491,16 +465,14 @@ test('send returns empty array on exception', function () {
 
     $channel = new SailthruChannel($client);
 
-    $notifiable = new class
-    {
+    $notifiable = new class () {
         public function routeNotificationFor(): string
         {
             return 'user@example.com';
         }
     };
 
-    $notification = new class extends Notification
-    {
+    $notification = new class () extends Notification {
         public function toSailthru($notifiable): SailthruMessage
         {
             return (new SailthruMessage('fail-template'))

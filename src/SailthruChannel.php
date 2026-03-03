@@ -13,9 +13,6 @@ use Sailthru_Client_Exception;
 
 class SailthruChannel
 {
-    /**
-     * @param SailthruClient $sailthru
-     */
     public function __construct(protected SailthruClient $sailthru)
     {
     }
@@ -24,8 +21,6 @@ class SailthruChannel
      * Get default variables that are defined for all emails.
      *
      * Override this to use a different strategy.
-     *
-     * @return array
      */
     public static function getDefaultVars(): array
     {
@@ -33,14 +28,11 @@ class SailthruChannel
     }
 
     /**
-     * @param $notifiable
-     * @param Notification $notification
-     *
      * @return array
      */
     public function send(
         $notifiable,
-        Notification $notification
+        Notification $notification,
     ) {
         if (config('services.sailthru.enabled') === false) {
             Log::info(
@@ -48,7 +40,7 @@ class SailthruChannel
                 [
                     'notifiable' => $notifiable,
                     'notification' => $notification,
-                ]
+                ],
             );
 
             return [];
@@ -58,20 +50,20 @@ class SailthruChannel
             /** @var SailthruMessage $message */
             $message = $notification->toSailthru($notifiable);
             $message->mergeDefaultVars(
-                static::getDefaultVars()
+                static::getDefaultVars(),
             );
 
             if (config('services.sailthru.whitelist_check.enabled') === true) {
-                if(!Str::is(
+                if (!Str::is(
                     config('services.sailthru.whitelist_check.domains'),
-                    $message->getToEmail()
-                )){
+                    $message->getToEmail(),
+                )) {
                     Log::info(
                         'Sailthru email not sent to ' . $message->getToEmail() . ' due to domain whitelist limitations',
                         [
                             'notifiable' => $notifiable,
                             'notification' => $notification,
-                        ]
+                        ],
                     );
 
                     return [];
@@ -90,8 +82,8 @@ class SailthruChannel
                     [
                         'message' => $message,
                         'response' => $response,
-                    ]
-                )
+                    ],
+                ),
             );
 
             return $response;
@@ -104,8 +96,8 @@ class SailthruChannel
                     [
                         'message' => $message ?? null,
                         'exception' => $e,
-                    ]
-                )
+                    ],
+                ),
             );
 
             return [];
@@ -113,14 +105,12 @@ class SailthruChannel
     }
 
     /**
-     * @param SailthruMessage $sailthruMessage
-     *
      * @throws Sailthru_Client_Exception
      *
      * @return array
      */
     protected function multiSend(
-        SailthruMessage $sailthruMessage
+        SailthruMessage $sailthruMessage,
     ) {
         $template = $sailthruMessage->getTemplate();
         $toEmail = $sailthruMessage->getToEmail();
@@ -137,7 +127,7 @@ class SailthruChannel
                     'vars' => $vars,
                     'eVars' => $eVars,
                     'options' => $options,
-                ]
+                ],
             );
         }
 
@@ -146,19 +136,17 @@ class SailthruChannel
             $toEmail,
             $vars,
             $eVars,
-            $options
+            $options,
         );
     }
 
     /**
-     * @param SailthruMessage $sailthruMessage
-     *
      * @throws Sailthru_Client_Exception
      *
      * @return array
      */
     protected function singleSend(
-        SailthruMessage $sailthruMessage
+        SailthruMessage $sailthruMessage,
     ) {
         $template = $sailthruMessage->getTemplate();
         $toEmail = $sailthruMessage->getToEmail();
@@ -173,7 +161,7 @@ class SailthruChannel
                     'email' => $toEmail,
                     'vars' => $vars,
                     'options' => $options,
-                ]
+                ],
             );
         }
 
@@ -181,7 +169,7 @@ class SailthruChannel
             $template,
             $toEmail,
             $vars,
-            $options
+            $options,
         );
     }
 }
