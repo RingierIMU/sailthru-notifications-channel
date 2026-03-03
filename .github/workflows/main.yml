@@ -2,9 +2,6 @@ name: Unit Tests
 
 on:
   pull_request:
-    branches:
-      - master
-      - main
   push:
     branches:
       - master
@@ -12,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2-arm-ubuntu-2404
 
     strategy:
       fail-fast: false
@@ -36,7 +33,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          tools: composer:v2
           coverage: none
+        env:
+          runner: ubicloud
 
       - name: Get Composer cache directory
         id: composer-cache
