@@ -14,17 +14,10 @@ use Sailthru_Client_Exception;
 class SailthruChannel
 {
     /**
-     * @var SailthruClient
-     */
-    protected $sailthru;
-
-    /**
      * @param SailthruClient $sailthru
      */
-    public function __construct(
-        SailthruClient $sailthru
-    ) {
-        $this->sailthru = $sailthru;
+    public function __construct(protected SailthruClient $sailthru)
+    {
     }
 
     /**
@@ -109,7 +102,7 @@ class SailthruChannel
                     $notification,
                     'sailthru',
                     [
-                        'message' => isset($message) ? $message : null,
+                        'message' => $message ?? null,
                         'exception' => $e,
                     ]
                 )

@@ -8,23 +8,23 @@ use Illuminate\Support\ServiceProvider;
 
 class SailthruServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    public function register()
+    #[\Override]
+    public function register(): void
     {
         $this->app->singleton(
             SailthruClient::class,
-            function (Application $app) {
-                return new SailthruClient(
-                    $app['config']->get('services.sailthru.api_key'),
-                    $app['config']->get('services.sailthru.secret')
-                );
-            }
+            fn(Application $app) => new SailthruClient(
+                $app['config']->get('services.sailthru.api_key'),
+                $app['config']->get('services.sailthru.secret')
+            )
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function provides()
+    #[\Override]
+    public function provides(): array
     {
         return [SailthruClient::class];
     }

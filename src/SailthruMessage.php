@@ -7,68 +7,63 @@ use Illuminate\Support\Arr;
 class SailthruMessage
 {
     /**
-     * @var string
-     */
-    protected $template;
-
-    /**
      * The message parameter variables
      *
      * @var array
      */
-    protected $vars = [];
+    protected array $vars = [];
 
     /**
      * Multi-send EmailVars
      *
      * @var array
      */
-    protected $eVars = [];
+    protected array $eVars = [];
 
     /**
      * The email address the message should be sent from.
      *
      * @var string
      */
-    protected $fromEmail;
+    protected string $fromEmail;
 
     /**
      * The From Name the message should be sent from.
      *
      * @var string
      */
-    protected $fromName;
+    protected string $fromName;
 
     /**
      * The email address for the Recipient
      *
      * @var string
      */
-    protected $toEmail;
+    protected string $toEmail;
 
     /**
      * The Name of the Recipient
      *
      * @var string
      */
-    protected $toName;
+    protected string $toName;
 
     /**
      * The Reply To for the message
      *
      * @var string
      */
-    protected $replyTo;
+    protected string $replyTo;
 
     /**
      * @var bool
      */
-    protected $isMultiSend = false;
+    protected bool $isMultiSend = false;
 
     /**
      * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * SailthruMessage constructor.
@@ -76,9 +71,8 @@ class SailthruMessage
      * @param string $template
      */
     public function __construct(
-        string $template
+        protected string $template
     ) {
-        $this->template = $template;
         $this->fromEmail = config('mail.from.address');
         $this->fromName = config('mail.from.name');
     }
@@ -288,7 +282,7 @@ class SailthruMessage
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->template;
     }
@@ -296,7 +290,7 @@ class SailthruMessage
     /**
      * @return array
      */
-    public function getVars()
+    public function getVars(): array
     {
         return $this->vars;
     }
@@ -304,7 +298,7 @@ class SailthruMessage
     /**
      * @return array
      */
-    public function getEVars()
+    public function getEVars(): array
     {
         return $this->eVars;
     }
@@ -312,7 +306,7 @@ class SailthruMessage
     /**
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         $options = $this->options;
 
@@ -326,7 +320,7 @@ class SailthruMessage
     /**
      * @return string
      */
-    public function getFromEmail()
+    public function getFromEmail(): string
     {
         return $this->fromEmail;
     }
@@ -334,7 +328,7 @@ class SailthruMessage
     /**
      * @return string
      */
-    public function getFromName()
+    public function getFromName(): string
     {
         return $this->fromName;
     }
@@ -342,7 +336,7 @@ class SailthruMessage
     /**
      * @return string
      */
-    public function getToEmail()
+    public function getToEmail(): string
     {
         return $this->toEmail;
     }
@@ -350,7 +344,7 @@ class SailthruMessage
     /**
      * @return string
      */
-    public function getToName()
+    public function getToName(): string
     {
         return $this->toName;
     }
@@ -358,7 +352,7 @@ class SailthruMessage
     /**
      * @return string
      */
-    public function getReplyTo()
+    public function getReplyTo(): string
     {
         return $this->replyTo;
     }
