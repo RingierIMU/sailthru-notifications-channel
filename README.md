@@ -1,124 +1,141 @@
-Here's the latest documentation on Laravel 5.3 Notifications System: 
+# Sailthru Notifications Channel for Laravel
 
-https://laravel.com/docs/master/notifications
-
-# A Boilerplate repo for contributions
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/laravel-notification-channels/sailthru.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/sailthru-notifications-channel)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/laravel-notification-channels/sailthru-notifications-channel.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/sailthru-notifications-channel)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/laravel-notification-channels/sailthru/master.svg?style=flat-square)](https://travis-ci.org/laravel-notification-channels/sailthru)
-[![StyleCI](https://styleci.io/repos/:style_ci_id/shield)](https://styleci.io/repos/:style_ci_id)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/:sensio_labs_id.svg?style=flat-square)](https://insight.sensiolabs.com/projects/:sensio_labs_id)
-[![Quality Score](https://img.shields.io/scrutinizer/g/laravel-notification-channels/sailthru.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/sailthru)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/laravel-notification-channels/sailthru/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/sailthru/?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel-notification-channels/sailthru.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/sailthru)
+[![Unit Tests](https://github.com/laravel-notification-channels/sailthru/actions/workflows/main.yml/badge.svg)](https://github.com/laravel-notification-channels/sailthru/actions)
 
-This package makes it easy to send notifications using [Sailthru](https://www.sailthru.com) with Laravel 5.8.
+This package provides a [Sailthru](https://www.sailthru.com) notification channel for Laravel, making it easy to send transactional emails via Sailthru templates.
 
-**Note:** Replace ```Sailthru``` ```Sailthru``` ```Dylan Harbour``` ```dylanharbour``` ```http://ringier.tech``` ```tools@roam.africa``` ```sailthru``` ```:package_description``` ```:style_ci_id``` ```:sensio_labs_id``` with their correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE.md](LICENSE.md), [composer.json](composer.json) and other files, then delete this line.
-**Tip:** Use "Find in Path/Files" in your code editor to find these keywords within the package directory and replace all occurences with your specified term.
-
-This is where your description should go. Add a little code example so build can understand real quick how the package can be used. Try and limit it to a paragraph or two.
-
-
-
-## Contents
-
-- [Installation](#installation)
-	- [Setting up the Sailthru service](#setting-up-the-Sailthru-service)
-- [Usage](#usage)
-	- [Available Message methods](#available-message-methods)
-- [Changelog](#changelog)
-- [Testing](#testing)
-- [Security](#security)
-- [Contributing](#contributing)
-- [Credits](#credits)
-- [License](#license)
-
+**Requirements:** PHP 8.3+ and Laravel 11 or 12.
 
 ## Installation
 
-1. Add your Sailthru API details to `config/services`
-```
-'sailthru' => [
-        'api_key' => '',
-        'secret' => '',
-    ],
-```
-2. `composer require laravel-notification-channels/sailthru-notifications-channel`
-(Specify Repo until official package is added to the notifications channel repo)
+Install the package via Composer:
 
-2. If required, register the `SailthruServiceProvider`
+```bash
+composer require laravel-notification-channels/sailthru-notifications-channel
+```
 
+The service provider is auto-discovered -- no manual registration needed.
 
 ### Setting up the Sailthru service
 
-Sign Up on their Website
+Add your Sailthru configuration to `config/services.php`:
+
+```php
+'sailthru' => [
+    'api_key' => env('SAILTHRU_API_KEY'),
+    'secret'  => env('SAILTHRU_SECRET'),
+
+    // Optional: set to false to disable sending (logs instead)
+    'enabled' => env('SAILTHRU_ENABLED', true),
+
+    // Optional: restrict sending to specific domains
+    'whitelist_check' => [
+        'enabled' => env('SAILTHRU_WHITELIST_ENABLED', false),
+        'domains' => ['*@yourdomain.com'],
+    ],
+
+    // Optional: log API payloads for debugging
+    'log_payload' => env('SAILTHRU_LOG_PAYLOAD', false),
+],
+```
 
 ## Usage
 
-1. Follow standard Notifiable/Notifications Setup for a model. 
-2. If default / global vars are required for all Sailthru calls, add them using the `sailthruDefaultVars` method on your notifiable e.g. 
-```
-    /**
-     * @return array
-     */
-    public function sailthruDefaultVars(): array
-    {
-        return ['global_var_foo' => 'bar'];
+### Basic usage -- single recipient
 
-    }
-```
-3. Add a `toSailthru` method on your notification, where you define template name and any specific var. 
+Create a notification with a `toSailthru` method that returns a `SailthruMessage`:
 
-```
-    /**
-     * @param User $user
-     * @return SailthruMessage
-     */
-    public function toSailthru(User $user)
-    {
+```php
+use Illuminate\Notifications\Notification;
+use NotificationChannels\Sailthru\SailthruChannel;
+use NotificationChannels\Sailthru\SailthruMessage;
 
-        return SailthruMessage::create('reset password')
-            ->toName($user->name)
-            ->toEmail($user->email)
-            ->vars(
-                [
-                    'reset_password_link' => 'https://www.example.com',
-                    'link_expiration_minutes' => config('auth.reminder.expire', 60),
-                    'first_name' => $user->name,
-                ]
-            );
-    }
-```
-
-4. Change the `via()` method in your notification to include the `SailthruChannel`.
-
-```
-    /**
-     * Get the notification's channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array|string
-     */
-    public function via($notifiable)
+class OrderShipped extends Notification
+{
+    public function via(mixed $notifiable): array
     {
         return [SailthruChannel::class];
     }
 
+    public function toSailthru(mixed $notifiable): SailthruMessage
+    {
+        return SailthruMessage::create('order-shipped')
+            ->toEmail($notifiable->email)
+            ->toName($notifiable->name)
+            ->vars([
+                'order_id' => $this->order->id,
+                'tracking_url' => $this->order->tracking_url,
+            ]);
+    }
+}
 ```
-### Available Message methods
 
-A list of all available options
+### Multi-recipient send
+
+Use `toEmails()` to send to multiple recipients at once, with optional per-recipient variables via `eVars()`:
+
+```php
+public function toSailthru(mixed $notifiable): SailthruMessage
+{
+    return SailthruMessage::create('weekly-digest')
+        ->toEmails(['alice@example.com', 'bob@example.com'])
+        ->vars(['week' => now()->weekOfYear])
+        ->eVars([
+            'alice@example.com' => ['first_name' => 'Alice'],
+            'bob@example.com'   => ['first_name' => 'Bob'],
+        ]);
+}
+```
+
+### Default variables on the notifiable
+
+Define a `sailthruDefaultVars()` method on your notifiable model to provide variables that are merged into every Sailthru message. Message-specific vars take precedence over default vars.
+
+```php
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    public function sailthruDefaultVars(): array
+    {
+        return [
+            'first_name' => $this->name,
+            'account_id' => $this->id,
+        ];
+    }
+}
+```
+
+## Available methods
+
+All methods on `SailthruMessage` are fluent (return `$this`):
+
+| Method | Description |
+|--------|-------------|
+| `create(string $template)` | Static factory -- creates a new message with the given Sailthru template name |
+| `template(string $template)` | Override the template name |
+| `vars(array $vars)` | Set template variables |
+| `eVars(array $eVars)` | Set per-recipient variables for multi-send |
+| `to(array $to)` | Set recipient from array (`email`/`address` and `name` keys) |
+| `toEmail(string $email)` | Set recipient email address |
+| `toName(string $name)` | Set recipient name |
+| `toEmails(array $emails)` | Set multiple recipients (enables multi-send) |
+| `from(array $from)` | Set sender from array (`email`/`address` and `name` keys) |
+| `fromEmail(string $email)` | Set sender email (defaults to `mail.from.address` config) |
+| `fromName(string $name)` | Set sender name (defaults to `mail.from.name` config) |
+| `replyTo(string $email)` | Set reply-to address |
+| `options(array $options)` | Set additional Sailthru API options |
 
 ## Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Testing
 
-``` bash
-$ composer test
+```bash
+composer test
 ```
 
 ## Security
@@ -131,7 +148,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
-- Developed and Maintained by [Ringier Tech & Data](http://ringier.tech) and [Ringier One Africa Media](https://roam.africa)
+- Developed and maintained by [Ringier Tech & Data](http://ringier.tech) and [Ringier One Africa Media](https://roam.africa)
 - [Dylan Harbour](https://github.com/dylanharbour)
 - [All Contributors](../../contributors)
 
